@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="header">
+    <meta charset="UTF-8">
+    <style>
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background-color: #CA4499;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .nav-brand {
+            color: white;
+            font-size: 36px;
+            font-weight: bold;
+            margin-right: 40px;
+            font-family: "Microsoft YaHei", sans-serif;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-item {
+            color: white;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+            padding: 0 20px;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-right: 8px;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .username {
+            color: white;
+            margin-right: 15px;
+        }
+
+        .logout-btn {
+            color: white;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: background-color 0.3s;
+        }
+
+        .logout-btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .user-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            z-index: 1000;
+        }
+
+        .user-dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-item {
+            color: #24292f;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f6f8fa;
+        }
+
+        .dropdown-item i {
+            width: 16px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div th:fragment="navbar" class="navbar">
+        <div class="nav-brand">Online Intership</div>
+        <nav class="nav-menu">
+            <a th:href="@{/}" class="nav-item">首页</a>
+            <a th:href="@{/recommend}" class="nav-item">岗位推荐</a>
+            <a th:href="@{/progress}" class="nav-item">实习进度</a>
+            <th:block th:if="${session.user != null}">
+                <a th:href="${session.user.role == 'admin' ? '/admin' : 
+                             session.user.role == 'company' ? '/company' :
+                             session.user.role == 'school' ? '/school' : '/student'}" 
+                   class="nav-item">个人中心</a>
+            </th:block>
+            <th:block th:unless="${session.user != null}">
+                <a href="/login" class="nav-item">个人中心</a>
+            </th:block>
+        </nav>
+        <div class="user-info">
+            <!-- 如果用户已登录 -->
+            <div th:if="${session.user != null}" style="display: flex; align-items: center;">
+                <img th:src="${session.user.getAvatarUrl()}" 
+                     class="avatar" alt="用户头像">
+                <div class="user-dropdown">
+                    <span class="username" th:text="${session.user.name}">未登录</span>
+                    <div class="dropdown-content">
+                        <a th:href="@{${session.role == 'admin' ? '/admin' : 
+                                      session.role == 'company' ? '/company' :
+                                      session.role == 'school' ? '/school' : '/student'}}" 
+                           class="dropdown-item">
+                            <i class="fas fa-user-cog"></i>
+                            <span>个人中心</span>
+                        </a>
+                        <a href="/logout" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>退出登录</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- 如果用户未登录 -->
+            <div th:unless="${session.user != null}" style="display: flex; align-items: center;">
+                <img src="/images/default-avatar.png" class="avatar" alt="默认头像">
+                <span class="username">未登录</span>
+                <a href="/login" class="logout-btn">登录</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

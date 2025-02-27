@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>实习直聘后台管理系统</title>
+    <style>
+        /* 重置样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #24292f;
+            background-color: #f6f8fa;
+        }
+
+        /* 顶部导航栏 */
+        .navbar {
+            height: 60px;
+            background: white;
+            border-bottom: 1px solid #d0d7de;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 600;
+            color: #24292f;
+            text-decoration: none;
+            margin-right: 24px;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #57606a;
+        }
+
+        .admin-info {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* 左侧菜单 */
+        .sidebar {
+            width: 256px;
+            background: white;
+            border-right: 1px solid #d0d7de;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            bottom: 0;
+            padding: 24px 0;
+            overflow-y: auto;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 24px;
+            color: #24292f;
+            text-decoration: none;
+            gap: 12px;
+        }
+
+        .menu-item:hover {
+            background: #f6f8fa;
+        }
+
+        .menu-item.active {
+            background: #f6f8fa;
+            border-left: 2px solid #0969da;
+            color: #0969da;
+        }
+
+        .menu-item i {
+            width: 16px;
+            text-align: center;
+        }
+
+        /* 主内容区 */
+        .main-content {
+            margin-left: 256px;
+            margin-top: 60px;
+            padding: 24px;
+            min-height: calc(100vh - 60px);
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="navbar">
+        <a href="/admin" class="logo">实习直聘管理系统</a>
+        <div class="breadcrumb">
+            <i class="fas fa-home"></i>
+            <span>首页</span>
+            <span>/</span>
+            <span>系统管理</span>
+            <span>/</span>
+            <span>用户管理</span>
+        </div>
+        <div class="admin-info">
+            <i class="fas fa-user"></i>
+            <span>系统管理员</span>
+            <i class="fas fa-angle-down"></i>
+        </div>
+    </div>
+
+    <!-- 左侧菜单 -->
+    <div class="sidebar">
+        <a href="/admin" class="menu-item active">
+            <i class="fas fa-home"></i>
+            <span>首页</span>
+        </a>
+        <a href="/admin/system" class="menu-item">
+            <i class="fas fa-cog"></i>
+            <span>系统管理</span>
+        </a>
+        <a href="/admin/users" class="menu-item">
+            <i class="fas fa-users"></i>
+            <span>用户管理</span>
+        </a>
+        <a href="/admin/roles" class="menu-item">
+            <i class="fas fa-user-tag"></i>
+            <span>角色管理</span>
+        </a>
+        <a href="/admin/menus" class="menu-item">
+            <i class="fas fa-list"></i>
+            <span>菜单管理</span>
+        </a>
+        <a href="/admin/departments" class="menu-item">
+            <i class="fas fa-building"></i>
+            <span>部门管理</span>
+        </a>
+        <a href="/admin/notices" class="menu-item">
+            <i class="fas fa-bullhorn"></i>
+            <span>通知公告</span>
+        </a>
+        <a href="/admin/files" class="menu-item">
+            <i class="fas fa-file"></i>
+            <span>文件管理</span>
+        </a>
+        <a href="/admin/storage" class="menu-item">
+            <i class="fas fa-database"></i>
+            <span>存储管理</span>
+        </a>
+        <a href="/admin/settings" class="menu-item">
+            <i class="fas fa-sliders-h"></i>
+            <span>系统配置</span>
+        </a>
+        <a href="/admin/monitor" class="menu-item">
+            <i class="fas fa-desktop"></i>
+            <span>系统监控</span>
+        </a>
+        <a href="/admin/generator" class="menu-item">
+            <i class="fas fa-code"></i>
+            <span>代码生成</span>
+        </a>
+        <a href="/admin/about" class="menu-item">
+            <i class="fas fa-info-circle"></i>
+            <span>关于项目</span>
+        </a>
+    </div>
+
+    <!-- 主内容区 -->
+    <div class="main-content">
+        <div th:replace="${content}">
+            <!-- 具体页面内容将被注入到这里 -->
+        </div>
+    </div>
+</body>
+</html> 

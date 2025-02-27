@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="footer-styles">
+    <style>
+        .site-footer {
+            background-color: #2d2d2d;
+            color: #999;
+            padding: 40px 0 20px;
+            margin-top: 50px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            padding: 0 20px;
+        }
+
+        .footer-section h3 {
+            color: #fff;
+            font-size: 16px;
+            margin-bottom: 20px;
+            font-weight: normal;
+        }
+
+        .footer-section a {
+            display: block;
+            color: #999;
+            text-decoration: none;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .footer-section a:hover {
+            color: #fff;
+        }
+
+        .footer-section p {
+            margin-bottom: 10px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .service-time {
+            color: #999;
+        }
+
+        .service-phone {
+            color: #fff;
+            font-size: 16px;
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 30px auto 0;
+            padding: 20px;
+            border-top: 1px solid #3d3d3d;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            font-size: 12px;
+        }
+
+        .footer-icon {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+    </style>
+</head>
+<body>
+    <footer th:fragment="footer" class="site-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>企业服务</h3>
+                <a href="/job-search">职位搜索</a>
+                <a href="/app-download">APP下载</a>
+                <a href="/investor">投资者关系</a>
+                <a href="/vip">会员服务</a>
+            </div>
+            <div class="footer-section">
+                <h3>使用与帮助</h3>
+                <a href="/agreement">协议与规则</a>
+                <a href="/privacy">隐私政策</a>
+                <a href="/security">防骗指南</a>
+                <a href="/help">使用帮助</a>
+            </div>
+            <div class="footer-section">
+                <h3>联系我们</h3>
+                <p>公司地址：北京市朝阳区太阳宫中路16号院</p>
+                <p>违法和不良信息举报：jubao@example.com</p>
+            </div>
+            <div class="footer-section contact-info">
+                <h3>在线客服</h3>
+                <p class="service-time">工作日 8:00 - 22:00</p>
+                <p class="service-time">休息日 8:00 - 22:00</p>
+                <p class="service-phone">企业服务热线：400-065-5799</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-links">
+                <span>Copyright © 2024 实习直聘</span>
+                <span>京ICP证140134441号</span>
+                <span>京ICP证150923号</span>
+                <span class="footer-icon">🔒 电子营业执照</span>
+                <span class="footer-icon">👮 京公网安备110105020328</span>
+            </div>
+        </div>
+    </footer>
+</body>
+</html> 

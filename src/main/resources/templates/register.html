@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>实习管理系统 - 注册</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .video-container video {
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+        }
+
+        .login-container {
+            width: 500px;
+            margin: 300px auto;
+            padding: 50px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+        .btn-login:hover {
+            background-color: #0056b3;
+        }
+
+        .role-group {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .role-option {
+            display: flex;
+            align-items: center;
+            margin: 0 15px;
+        }
+
+        .role-option input[type="radio"] {
+            margin-right: 8px;
+        }
+
+        .role-option label {
+            margin: 0;
+            display: inline-block;
+        }
+
+        .login-link {
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .login-link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .alert {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            display: block;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="video-container">
+        <video autoplay muted loop playsinline>
+            <source src="/images/login.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="login-container">
+        <h2 style="text-align: center;">用户注册</h2>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        
+        <form th:action="@{/register}" method="post">
+            <div class="form-group">
+                <label for="username">用户名</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">密码</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">确认密码</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+            </div>
+            <div class="form-group">
+                <label for="name">姓名/名称</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <div class="role-group">
+                    <div class="role-option">
+                        <input type="radio" id="student" name="role" value="student" checked>
+                        <label for="student">student</label>
+                    </div>
+                    <div class="role-option">
+                        <input type="radio" id="company" name="role" value="company">
+                        <label for="company">company</label>
+                    </div>
+                    <div class="role-option">
+                        <input type="radio" id="school" name="role" value="school">
+                        <label for="school">school</label>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn-login">注册</button>
+        </form>
+        <div class="login-link">
+            <span>已有账号？</span>
+            <a href="/login">直接登录</a>
+        </div>
+    </div>
+    
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var error = /*[[${error}]]*/ null;
+        var success = /*[[${success}]]*/ null;
+        
+        if (error) {
+            Swal.fire({
+                icon: 'error',
+                title: '错误',
+                text: error
+            });
+        }
+        
+        if (success) {
+            Swal.fire({
+                icon: 'success',
+                title: '成功',
+                text: success,
+                timer: 1500
+            }).then(() => {
+                window.location.href = '/login';
+            });
+        }
+        /*]]>*/
+    </script>
+</body>
+</html> 

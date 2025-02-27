@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>岗位推荐 - 实习直聘</title>
+    <th:block th:replace="common/header :: header"/>
+    <th:block th:replace="common/footer :: footer-styles"/>
+    <style>
+        /* 搜索区域样式调整 */
+        .search-section {
+            max-width: 1200px;
+            margin: 80px auto 20px;
+            padding: 24px 20px;
+            background-color: #f6f8fa;
+            border-bottom: 1px solid #d0d7de;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .main-search-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .search-button {
+            padding: 12px 24px;
+            background-color: #CA4499;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .hot-tags {
+            margin-top: 12px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .hot-tag {
+            color: #57606a;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .hot-tag:hover {
+            color: #0969da;
+        }
+
+        /* 主容器样式调整 */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 256px 1fr 296px;  /* 调整列宽 */
+            gap: 24px;
+            background: white;
+        }
+
+        /* 左侧筛选栏调整 */
+        .filter-sidebar {
+            background: white;
+            padding: 0 4px;  /* 减少内边距 */
+            position: sticky;  /* 固定定位 */
+            top: 80px;       /* 距离顶部距离 */
+            height: fit-content;
+            border-right: 1px solid #d0d7de;  /* 添加右边框 */
+        }
+
+        .filter-title {
+            font-size: 16px;
+            color: #24292f;
+            font-weight: 600;
+            margin-bottom: 16px;
+            padding: 8px 0;
+        }
+
+        .filter-section {
+            margin-bottom: 24px;
+        }
+
+        .filter-section h3 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            color: #24292f;
+            margin-bottom: 8px;
+            padding: 4px 0;
+        }
+
+        .section-count {
+            color: #57606a;
+            font-size: 12px;
+            font-weight: normal;
+        }
+
+        .filter-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .filter-item {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 8px;
+            margin-bottom: 2px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-item:hover {
+            background-color: #eaeef2;
+        }
+
+        .filter-item.active {
+            background-color: #f0f3f7;
+        }
+
+        .filter-item.active::before {
+            content: "";
+            position: absolute;
+            left: -4px;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background-color: #0969da;
+        }
+
+        .filter-label {
+            color: #24292f;
+            font-size: 14px;
+            flex-grow: 1;
+        }
+
+        .filter-count {
+            color: #57606a;
+            font-size: 12px;
+            background-color: #f0f3f7;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+
+        /* 移除复选框 */
+        .filter-checkbox {
+            display: none;
+        }
+
+        /* 中间内容区调整 */
+        .content-area {
+            background: white;
+            border-radius: 6px;
+            padding: 16px;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            margin-bottom: 16px;
+        }
+
+        .result-info {
+            display: flex;
+            gap: 12px;
+        }
+
+        .result-count {
+            font-size: 20px;
+            color: #24292f;
+            font-weight: bold; 
+
+        }
+
+        
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            text-decoration: none;  /* 去掉下划线 */
+            padding: 8px 16px;
+            border-radius: 6px;
+            color: #24292f;
+            background: #f6f8fa;
+            border: 1px solid #d0d7de;
+            margin-right: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .action-btn:hover {
+            background-color: #0969da;
+            color: white;
+        }
+
+        .action-btn.active {
+            background-color: #0969da;
+            color: white;
+        }
+
+        .action-btn i {
+            font-size: 14px;
+        }
+
+        .job-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .job-card {
+            width: 100%;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            padding: 16px;
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .job-title {
+            color: #0969da;
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .job-title:hover {
+            color: #0969da;
+            text-decoration: underline;
+        }
+
+        .job-meta {
+            display: flex;
+            gap: 16px;
+            color: #57606a;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .job-tags {
+            display: flex;
+            gap: 8px;
+        }
+
+        .job-tag {
+            padding: 2px 8px;
+            background: #f6f8fa;
+            border-radius: 12px;
+            color: #57606a;
+            font-size: 12px;
+        }
+
+        .apply-btn {
+            padding: 5px 16px;
+            background: #8ebff7;
+            color: white;
+            border: 1px solid rgba(27, 31, 36, 0.15);
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .apply-btn:hover {
+            background: #0969da;
+        }
+
+        /* 右侧区域调整 */
+        .promotion-area {
+            background: white;
+            border-radius: 6px;
+            padding: 16px;
+            height: fit-content;
+        }
+
+        .promotion-box {
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 24px;  /* 增加卡片之间的间距 */
+        }
+
+        .promotion-box img {
+    width: 50%;          /* 图片宽度占满容器 */
+    height: auto;         /* 高度自适应，保持图片比例 */
+    object-fit: contain;  /* 保持图片比例，不裁剪 */
+    border-radius: 6px;   /* 添加圆角 */
+    margin-bottom: 12px;
+}
+
+        .promotion-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #24292f;
+            margin-bottom: 8px;
+        }
+
+        .promotion-content {
+            color: #57606a;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .promotion-link {
+            color: #0969da;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .promotion-link:hover {
+            text-decoration: underline;
+        }
+
+        /* 分页样式 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            padding: 16px;
+            gap: 8px;
+        }
+
+        .page-btn {
+            padding: 5px 10px;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            background: white;
+            color: #24292f;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .page-btn.active {
+            background: #0969da;
+            color: white;
+            border-color: #0969da;
+        }
+
+        .page-btn:hover:not(.active) {
+            background: #f6f8fa;
+        }
+
+        .upload-time {
+            color: #57606a;
+            font-size: 12px;
+        }
+
+        .action-btn.active {
+            background-color: #0969da;
+            color: white;
+        }
+        
+        .filter-item {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        
+        .filter-item:hover {
+            background-color: #f6f8fa;
+        }
+        
+        .filter-item.active {
+            background-color: #0969da;
+            color: white;
+        }
+        
+        .page-btn {
+            text-decoration: none;
+            color: inherit;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="~{common/header :: navbar}"></div>
+
+    <!-- 修改搜索区域，添加表单和搜索参数 -->
+    <div class="search-section">
+        <form class="search-container" method="get" action="/recommend">
+            <input 
+                type="text" 
+                name="keyword" 
+                th:value="${keyword}"
+                class="main-search-input" 
+                placeholder="搜索职位、公司名称">
+            <button type="submit" class="search-button">搜索</button>
+        </form>
+        <div class="hot-tags">
+            热门搜索：
+            <a href="/recommend?keyword=Java" class="hot-tag">Java</a>
+            <a href="/recommend?keyword=前端" class="hot-tag">前端</a>
+            <a href="/recommend?keyword=算法" class="hot-tag">算法</a>
+            <a href="/recommend?keyword=测试" class="hot-tag">测试</a>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <!-- 左侧筛选栏 -->
+        <div class="filter-sidebar">
+            <div class="filter-title">Filter by</div>
+            
+            <div class="filter-section">
+                <h3>工作地点</h3>
+                <div class="filter-list">
+                    <a th:href="@{/recommend(keyword=${keyword}, location='北京', jobType=${jobType}, education=${education}, sortBy=${sortBy})}" 
+                       class="filter-item" 
+                       th:classappend="${location == '北京'} ? 'active' : ''">
+                        <span class="filter-label">北京</span>
+                        <span class="filter-count" th:text="${locationCounts['北京']}">238</span>
+                    </a>
+                    <a th:href="@{/recommend(keyword=${keyword}, location='上海', jobType=${jobType}, education=${education}, sortBy=${sortBy})}" 
+                       class="filter-item" 
+                       th:classappend="${location == '上海'} ? 'active' : ''">
+                        <span class="filter-label">上海</span>
+                        <span class="filter-count" th:text="${locationCounts['上海']}">186</span>
+                    </a>
+                    <a th:href="@{/recommend(keyword=${keyword}, location='杭州', jobType=${jobType}, education=${education}, sortBy=${sortBy})}" 
+                       class="filter-item" 
+                       th:classappend="${location == '杭州'} ? 'active' : ''">
+                        <span class="filter-label">杭州</span>
+                        <span class="filter-count" th:text="${locationCounts['杭州']}">142</span>
+                    </a>
+                    <a th:href="@{/recommend(keyword=${keyword}, location='深圳', jobType=${jobType}, education=${education}, sortBy=${sortBy})}" 
+                       class="filter-item" 
+                       th:classappend="${location == '深圳'} ? 'active' : ''">
+                        <span class="filter-label">深圳</span>
+                        <span class="filter-count" th:text="${locationCounts['深圳']}">156</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 修改筛选按钮，添加链接 -->
+            <div class="filter-section">
+                <h3>工作类型</h3>
+                <div class="filter-list">
+                    <a th:href="@{/recommend(keyword=${keyword}, jobType='全职实习', location=${location}, education=${education}, sortBy=${sortBy})}" 
+                       class="filter-item" 
+                       th:classappend="${jobType == '全职实习'} ? 'active' : ''">
+                        <span class="filter-label">全职实习</span>
+                        <span class="filter-count" th:text="${jobTypeCounts['全职实习']}">425</span>
+                    </a>
+                    <a th:href="@{/recommend(keyword=${keyword}, jobType='兼职实习', location=${location}, education=${education}, sortBy=${sortBy})}" 
+                       class="filter-item" 
+                       th:classappend="${jobType == '兼职实习'} ? 'active' : ''">
+                        <span class="filter-label">兼职实习</span>
+                        <span class="filter-count" th:text="${jobTypeCounts['兼职实习']}">297</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <h3>学历要求</h3>
+                <div class="filter-list">
+                    <a th:href="@{/recommend(keyword=${keyword}, education='大专及以上', location=${location}, jobType=${jobType}, sortBy=${sortBy})}" 
+                       class="filter-item" 
+                       th:classappend="${education == '大专及以上'} ? 'active' : ''">
+                        <span class="filter-label">大专及以上</span>
+                        <span class="filter-count" th:text="${educationCounts['大专及以上']}">156</span>
+                    </a>
+                    <a th:href="@{/recommend(keyword=${keyword}, education='本科及以上', location=${location}, jobType=${jobType}, sortBy=${sortBy})}" 
+                       class="filter-item" 
+                       th:classappend="${education == '本科及以上'} ? 'active' : ''">
+                        <span class="filter-label">本科及以上</span>
+                        <span class="filter-count" th:text="${educationCounts['本科及以上']}">486</span>
+                    </a>
+                    <a th:href="@{/recommend(keyword=${keyword}, education='硕士及以上', location=${location}, jobType=${jobType}, sortBy=${sortBy})}" 
+                       class="filter-item" 
+                       th:classappend="${education == '硕士及以上'} ? 'active' : ''">
+                        <span class="filter-label">硕士及以上</span>
+                        <span class="filter-count" th:text="${educationCounts['硕士及以上']}">80</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 中间内容区 -->
+        <div class="content-area">
+            <div class="toolbar">
+                <div class="result-info">
+                    <span class="result-count" th:text="${totalItems + ' 个职位'}">630k results</span>
+                </div>
+                <div class="action-buttons">
+                    <!-- 修改排序按钮，添加链接 -->
+                    <a th:href="@{/recommend(keyword=${keyword}, location=${location}, jobType=${jobType}, education=${education}, sortBy='latest')}"
+                       class="action-btn" th:classappend="${sortBy == 'latest'} ? 'active' : ''">
+                        <i class="far fa-clock"></i>
+                        最新发布
+                    </a>
+                    <a th:href="@{/recommend(keyword=${keyword}, location=${location}, jobType=${jobType}, education=${education}, sortBy='salary')}"
+                       class="action-btn" th:classappend="${sortBy == 'salary'} ? 'active' : ''">
+                        <i class="fas fa-dollar-sign"></i>
+                        薪资最高
+                    </a>
+                </div>
+            </div>
+
+            <div class="job-list">
+                <div class="job-card" th:each="job : ${jobs}">
+                    <div class="job-header">
+                        <h3 class="job-title" th:text="${job.title}">Java开发实习生</h3>
+                        <button class="apply-btn">投递简历</button>
+                    </div>
+                    <div class="job-meta">
+                        <span th:text="${job.companyName}">阿里巴巴</span>
+                        <span th:text="${job.location}">杭州</span>
+                        <span th:text="${job.salary}">300-400/天</span>
+                        <span class="upload-time" th:text="'发布于 ' + ${#temporals.format(job.createdAt, 'yyyy年MM月dd日')}">更新于 2024年2月27日</span>
+                    </div>
+                    <div class="job-tags">
+                        <span class="job-tag" th:text="${job.jobType}">全职实习</span>
+                        <span class="job-tag" th:text="${job.education}">本科及以上</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 修改分页部分 -->
+            <div class="pagination" th:if="${totalPages > 0}">
+                <a th:if="${currentPage > 0}"
+                   th:href="@{/recommend(page=${currentPage - 1}, keyword=${keyword}, location=${location}, jobType=${jobType}, education=${education}, sortBy=${sortBy})}"
+                   class="page-btn">上一页</a>
+                   
+                <th:block th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                    <a th:href="@{/recommend(page=${i}, keyword=${keyword}, location=${location}, jobType=${jobType}, education=${education}, sortBy=${sortBy})}"
+                       class="page-btn" th:classappend="${currentPage == i} ? 'active' : ''"
+                       th:text="${i + 1}">1</a>
+                </th:block>
+                
+                <a th:if="${currentPage < totalPages - 1}"
+                   th:href="@{/recommend(page=${currentPage + 1}, keyword=${keyword}, location=${location}, jobType=${jobType}, education=${education}, sortBy=${sortBy})}"
+                   class="page-btn">下一页</a>
+            </div>
+        </div>
+
+        <!-- 右侧推广区 -->
+        <div class="promotion-area">
+            <div class="promotion-box">
+                <img src="/images/tp.jpg" alt="GitHub Logo">
+                <h3 class="promotion-title">寻找优质实习机会</h3>
+                <p class="promotion-content">
+                    在这里发现最新的实习岗位，获取职业发展机会。
+                    定制你的求职偏好，让好工作主动找上门。
+                </p>
+                <a href="#" class="promotion-link">了解更多 →</a>
+            </div>
+
+            <div class="promotion-box">
+                <img src="/images/xx.jpg" alt="Feedback Icon">
+                <h3 class="promotion-title">帮助我们改进搜索体验</h3>
+                <p class="promotion-content">
+                    你的反馈对我们很重要！
+                    告诉我们如何让搜索变得更好。
+                </p>
+                <a href="#" class="promotion-link">提供反馈</a>
+            </div>
+
+            <div class="promotion-box">
+                <img src="/images/tip.png" alt="Tip Icon">
+                <p class="promotion-content">
+                    提示：按下 <kbd>/</kbd> 键快速激活搜索框
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{common/footer :: footer}"></div>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</body>
+</html> 
